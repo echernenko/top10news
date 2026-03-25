@@ -189,7 +189,7 @@ def call_llm(prompt: str, system: str = "You are a concise, neutral news editor.
 
     body = json.dumps(
         {
-            "model": "openai/gpt-4o-mini",
+            "model": "gpt-4o-mini",
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": prompt},

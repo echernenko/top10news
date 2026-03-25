@@ -45,3 +45,4 @@ Your page will be live at `https://<your-username>.github.io/top10news/`
 ## Cost
 
 **$0.** GitHub Actions free tier + GitHub Models free tier. Each run takes ~60 seconds.
+

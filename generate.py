@@ -259,9 +259,9 @@ Headlines:
 # ── HTML rendering ────────────────────────────────────────────────────────────
 
 SECTION_CONFIG = {
-    "wa": {"label": "Washington State", "icon": "🌲", "accent": "#4a9e6d"},
-    "ukraine": {"label": "Ukraine", "icon": "🇺🇦", "accent": "#f0c040"},
-    "world": {"label": "World", "icon": "🌍", "accent": "#d4a853"},
+    "wa": {"label": "Washington State", "icon": "🌲", "accent": "#2d7a4a"},
+    "ukraine": {"label": "Ukraine", "icon": '<svg width="26" height="17" viewBox="0 0 26 17" style="vertical-align:middle;border-radius:2px;flex-shrink:0"><rect width="26" height="8.5" fill="#005BBB"/><rect y="8.5" width="26" height="8.5" fill="#FFD700"/></svg>', "accent": "#005bbb"},
+    "world": {"label": "World", "icon": "🌍", "accent": "#bb1919"},
 }
 
 
@@ -280,18 +280,18 @@ def render_html(sections: dict[str, list[dict]]) -> str:
         for s in stories:
             story_num += 1
             stories_cards += f"""
-            <article class="story" style="--section-accent: {cfg['accent']}">
+            <article class="story">
                 <span class="story-number">{story_num:02d}</span>
-                <h2>{s['headline']}</h2>
-                <p class="summary">{s['summary']}</p>
-                <a href="{s['url']}" target="_blank" rel="noopener">
-                    {s['source']} ↗
-                </a>
+                <div class="story-body">
+                    <h2>{s['headline']}</h2>
+                    <p class="summary">{s['summary']}</p>
+                    <span class="story-source">{s['source']}</span>
+                </div>
             </article>"""
 
         sections_html += f"""
-        <section class="news-section">
-            <div class="section-header" style="--section-accent: {cfg['accent']}">
+        <section class="news-section" style="--section-accent: {cfg['accent']}">
+            <div class="section-header">
                 <span class="section-icon">{cfg['icon']}</span>
                 <h2 class="section-title">{cfg['label']}</h2>
                 <span class="story-count">{len(stories)} stories</span>
@@ -305,177 +305,169 @@ def render_html(sections: dict[str, list[dict]]) -> str:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 10 News</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root {{
-            --bg: #0a0a0a;
-            --fg: #e8e4df;
-            --muted: #787068;
-            --card-bg: #141210;
-            --border: #2a2622;
-        }}
-
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 
         body {{
-            background: var(--bg);
-            color: var(--fg);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
+            background: #ffffff;
+            color: #3d3d3d;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }}
+
+        .site-header {{
+            background: #bb1919;
+            color: #ffffff;
+            padding: 0 1.5rem;
+        }}
+
+        .site-header-inner {{
+            max-width: 976px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            padding: 3rem 1.5rem;
+            justify-content: space-between;
+            height: 56px;
         }}
 
-        header {{
-            text-align: center;
-            margin-bottom: 3rem;
+        .site-title {{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
         }}
 
-        header h1 {{
-            font-family: 'Instrument Serif', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 400;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            color: var(--fg);
-        }}
-
-        header h1 span {{
-            color: #d4a853;
-        }}
-
-        .subtitle {{
-            color: var(--muted);
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-        }}
-
-        .timestamp {{
-            color: var(--muted);
+        .site-meta {{
             font-size: 0.8rem;
-            margin-top: 0.5rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            opacity: 0.85;
+        }}
+
+        .site-subheader {{
+            background: #f6f6f6;
+            border-bottom: 1px solid #e6e6e6;
+            padding: 0.6rem 1.5rem;
+        }}
+
+        .site-subheader-inner {{
+            max-width: 976px;
+            margin: 0 auto;
+            font-size: 0.85rem;
+            color: #757575;
         }}
 
         .content {{
-            max-width: 680px;
-            width: 100%;
+            max-width: 976px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
         }}
 
         .news-section {{
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
         }}
 
         .section-header {{
+            border-top: 4px solid var(--section-accent);
+            padding-top: 0.75rem;
+            margin-bottom: 0.25rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--section-accent, var(--border));
+            gap: 0.5rem;
         }}
 
         .section-icon {{
-            font-size: 1.4rem;
+            font-size: 1.1rem;
         }}
 
         .section-title {{
-            font-family: 'Instrument Serif', serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            color: var(--section-accent, var(--fg));
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--section-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             flex: 1;
         }}
 
         .story-count {{
-            color: var(--muted);
             font-size: 0.75rem;
-            letter-spacing: 0.05em;
+            color: #757575;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }}
 
         .story {{
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.75rem;
-            position: relative;
-            transition: border-color 0.3s ease;
-            margin-bottom: 1rem;
-        }}
-
-        .story:hover {{
-            border-color: var(--section-accent, var(--border));
+            display: grid;
+            grid-template-columns: 2.25rem 1fr;
+            gap: 0 0.75rem;
+            border-bottom: 1px solid #e6e6e6;
+            padding: 1.1rem 0;
         }}
 
         .story-number {{
-            font-family: 'Instrument Serif', serif;
-            font-size: 2.5rem;
-            color: var(--section-accent, #d4a853);
-            opacity: 0.25;
-            position: absolute;
-            top: 0.75rem;
-            right: 1.25rem;
-            line-height: 1;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #b0b0b0;
+            padding-top: 0.25rem;
+            font-family: Georgia, serif;
         }}
+
+        .story-body {{}}
 
         .story h2 {{
-            font-family: 'Instrument Serif', serif;
-            font-size: 1.35rem;
-            font-weight: 400;
-            line-height: 1.3;
-            margin-bottom: 0.6rem;
-            padding-right: 2.5rem;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #121212;
+            line-height: 1.35;
+            margin-bottom: 0.4rem;
         }}
 
-        .story .summary {{
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
+        .summary {{
+            font-size: 0.875rem;
+            color: #3d3d3d;
+            line-height: 1.55;
+            margin-bottom: 0.45rem;
         }}
 
-        .story a {{
-            color: var(--section-accent, #d4a853);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.03em;
-            transition: opacity 0.2s;
+        .story-source {{
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }}
-
-        .story a:hover {{ opacity: 0.7; }}
 
         footer {{
-            margin-top: 2rem;
-            color: var(--muted);
-            font-size: 0.75rem;
+            background: #f6f6f6;
+            border-top: 1px solid #e6e6e6;
+            padding: 1.75rem 1.5rem;
             text-align: center;
+            color: #757575;
+            font-size: 0.8rem;
             line-height: 1.6;
         }}
 
-        @media (max-width: 500px) {{
-            body {{ padding: 2rem 1rem; }}
-            .story {{ padding: 1.25rem; }}
+        @media (max-width: 600px) {{
+            .site-meta {{ display: none; }}
+            .story {{ grid-template-columns: 1.75rem 1fr; }}
         }}
     </style>
 </head>
 <body>
-    <header>
-        <h1>Top <span>10</span> News</h1>
-        <p class="subtitle">World · Ukraine · Washington State</p>
-        <p class="timestamp">Updated {time_str}</p>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <span class="site-title">Top 10 News</span>
+            <span class="site-meta">World &middot; Ukraine &middot; Washington State</span>
+        </div>
     </header>
-    <div class="content">
-        {sections_html}
+    <div class="site-subheader">
+        <div class="site-subheader-inner">Updated {time_str}</div>
     </div>
+    <main class="content">
+        {sections_html}
+    </main>
     <footer>
-        Curated by AI from credible sources<br>
-        Updated every 6 hours
+        Curated by AI from credible sources &mdash; updated every 6 hours
     </footer>
 </body>
 </html>"""

@@ -423,7 +423,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
         }}
 
         .summary {{
-            font-size: 0.875rem;
+            font-size: 1rem;
             color: #3d3d3d;
             line-height: 1.55;
             margin-bottom: 0.45rem;

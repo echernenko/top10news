@@ -312,7 +312,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
             background: #ffffff;
             color: #3d3d3d;
             font-family: ReithSans, Helvetica, Arial, freesans, sans-serif;
-            font-size: 16px;
+            font-size: 1.2rem;
             line-height: 1.6;
         }}
 
@@ -414,8 +414,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
         .story-body {{}}
 
         .story h2 {{
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #121212;
             line-height: 1.35;
@@ -423,7 +422,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
         }}
 
         .summary {{
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #3d3d3d;
             line-height: 1.55;
             margin-bottom: 0.45rem;

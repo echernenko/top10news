@@ -311,7 +311,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
         body {{
             background: #ffffff;
             color: #3d3d3d;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: ReithSans, Helvetica, Arial, freesans, sans-serif;
             font-size: 16px;
             line-height: 1.6;
         }}

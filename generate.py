@@ -181,7 +181,7 @@ def fetch_category(category: str) -> list[dict]:
 
 # ── LLM curation ─────────────────────────────────────────────────────────────
 
-def call_llm(prompt: str, system: str = "You are a concise, neutral news editor.") -> str:
+def call_llm(prompt: str, system: str = "You are a concise, optimistic news editor.") -> str:
     """Call GitHub Models LLM and return raw content string."""
     api_key = os.environ.get("GITHUB_TOKEN", "")
     if not api_key:
@@ -233,7 +233,7 @@ def curate_category(headlines: list[dict], category: str, count: int) -> list[di
 
     prompt = f"""Below are recent headlines from {label} sources.
 
-Pick the TOP {count} most important and newsworthy stories. For each, provide:
+Pick the TOP {count} most important and newsworthy stories. Balance spectrum - upbeat, neutral and hard news. For each, provide:
 1. A clear headline (your own concise wording)
 2. A 2-3 sentence summary
 3. The original source name and URL from the list

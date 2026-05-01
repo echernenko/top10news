@@ -226,7 +226,7 @@ def curate_category(headlines: list[dict], category: str, count: int) -> list[di
     }[category]
 
     headlines_text = "\n".join(
-        f"- [{h['source']}] {h['title']}"
+        f"- [{h['source']}] {h['title']} | url: {h['link']}"
         + (f" | {h['description'][:120]}" if h["description"] else "")
         for h in headlines
     )
@@ -236,7 +236,7 @@ def curate_category(headlines: list[dict], category: str, count: int) -> list[di
 Pick the TOP {count} most important and newsworthy stories. Balance spectrum - upbeat, neutral and hard news. For each, provide:
 1. A clear headline (your own concise wording)
 2. A 2-3 sentence summary
-3. The original source name and URL from the list
+3. The original source name and the EXACT url from the list (do not modify or invent URLs)
 
 Respond ONLY with valid JSON array, no wrapping object, no markdown fences:
 [
@@ -439,7 +439,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
 
         .story-link {{
             display: inline-block;
-            margin-top: 0.35rem;
+            margin-top: 0.75rem;
             font-size: 0.8rem;
             color: var(--section-accent, #bb1919);
             text-decoration: none;

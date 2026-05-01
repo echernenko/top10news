@@ -286,6 +286,7 @@ def render_html(sections: dict[str, list[dict]]) -> str:
                     <h2>{s['headline']}</h2>
                     <p class="summary">{s['summary']}</p>
                     <span class="story-source">{s['source']}</span>
+                    {f'<a class="story-link" href="{s["url"]}" target="_blank" rel="noopener">Read from source →</a>' if s.get('url') else ''}
                 </div>
             </article>"""
 
@@ -434,6 +435,19 @@ def render_html(sections: dict[str, list[dict]]) -> str:
             color: #757575;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+        }}
+
+        .story-link {{
+            display: inline-block;
+            margin-top: 0.35rem;
+            font-size: 0.8rem;
+            color: var(--section-accent, #bb1919);
+            text-decoration: none;
+            font-weight: 600;
+        }}
+
+        .story-link:hover {{
+            text-decoration: underline;
         }}
 
         footer {{

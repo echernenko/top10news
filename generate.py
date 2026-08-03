@@ -25,7 +25,6 @@ SOURCES = {
             ("Crosscut", "https://crosscut.com/feed"),
         ],
         "scrape": [
-            ("KUOW", "https://www.kuow.org/stories"),
             ("Seattle PI", "https://www.seattlepi.com/local/"),
         ],
     },
@@ -33,7 +32,6 @@ SOURCES = {
         "feeds": [
             ("Ukrainska Pravda", "https://www.pravda.com.ua/eng/rss/"),
             ("Ukrinform", "https://www.ukrinform.net/rss/block-lastnews"),
-            ("Kyiv Independent", "https://kyivindependent.com/feed/"),
         ],
         "scrape": [
             ("Babel", "https://babel.ua/en"),
@@ -45,7 +43,6 @@ SOURCES = {
             ("NPR News", "https://feeds.npr.org/1001/rss.xml"),
             ("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml"),
             ("Associated Press", "https://feedx.net/rss/ap.xml"),
-            ("Reuters", "https://feedx.net/rss/reuters.xml"),
             ("The Guardian", "https://www.theguardian.com/world/rss"),
         ],
         "scrape": [],
@@ -177,7 +174,7 @@ def fetch_category(category: str) -> list[dict]:
         all_items.extend(scrape_headlines(name, url))
 
     print(f"    → {len(all_items)} headlines")
-    return all_items[:40]
+    return all_items[:30]
 
 
 # ── LLM curation ─────────────────────────────────────────────────────────────
@@ -196,7 +193,7 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
 
     body = json.dumps(
         {
-            "model": "llama-3.1-8b-instant",
+            "model": "llama-3.3-70b-versatile",
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
@@ -248,7 +245,7 @@ def curate_category(headlines: list[dict], category: str, count: int) -> list[di
 
     headlines_text = "\n".join(
         f"- [{h['source']}] {h['title']} | url: {h['link']}"
-        + (f" | {h['description'][:120]}" if h["description"] else "")
+        + (f" | {h['description'][:80]}" if h["description"] else "")
         for h in headlines
     )
 

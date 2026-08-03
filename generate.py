@@ -9,6 +9,7 @@ Fetches RSS feeds + scrapes websites, curates via LLM (GitHub Models).
 import json
 import os
 import re
+import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -181,6 +182,12 @@ def fetch_category(category: str) -> list[dict]:
 
 # ── LLM curation ─────────────────────────────────────────────────────────────
 
+def _retry_after_from_body(detail: str) -> float:
+    """Extract a retry delay (seconds) from Groq's 'try again in 22.71s' message."""
+    m = re.search(r"try again in ([\d.]+)s", detail)
+    return float(m.group(1)) if m else 0.0
+
+
 def call_llm(prompt: str, system: str = "You are a concise, optimistic news editor.") -> str:
     """Call Groq LLM (OpenAI-compatible) and return raw content string."""
     api_key = os.environ.get("GROQ_API_KEY", "")
@@ -189,7 +196,7 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
 
     body = json.dumps(
         {
-            "model": "llama-3.3-70b-versatile",
+            "model": "llama-3.1-8b-instant",
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
@@ -210,12 +217,20 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
         },
     )
 
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            data = json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Groq API {e.code} {e.reason}: {detail}") from e
+    # Retry on rate limits (429), honoring the server's Retry-After hint.
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read())
+            break
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", errors="replace")
+            if e.code == 429 and attempt < 3:
+                wait = float(e.headers.get("retry-after") or 0) or _retry_after_from_body(detail) or 20.0
+                print(f"    ⏳ Rate limited, retrying in {wait:.0f}s...")
+                time.sleep(wait + 1)
+                continue
+            raise RuntimeError(f"Groq API {e.code} {e.reason}: {detail}") from e
 
     content = data["choices"][0]["message"]["content"]
     content = re.sub(r"^```json\s*", "", content.strip())

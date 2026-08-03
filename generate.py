@@ -205,6 +205,8 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
+            # Cloudflare (error 1010) blocks the default urllib User-Agent.
+            "User-Agent": "Mozilla/5.0 (compatible; NewsAgent/1.0)",
         },
     )
 

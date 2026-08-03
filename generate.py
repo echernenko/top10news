@@ -208,8 +208,12 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
         },
     )
 
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        data = json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Groq API {e.code} {e.reason}: {detail}") from e
 
     content = data["choices"][0]["message"]["content"]
     content = re.sub(r"^```json\s*", "", content.strip())

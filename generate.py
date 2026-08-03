@@ -182,14 +182,14 @@ def fetch_category(category: str) -> list[dict]:
 # ── LLM curation ─────────────────────────────────────────────────────────────
 
 def call_llm(prompt: str, system: str = "You are a concise, optimistic news editor.") -> str:
-    """Call GitHub Models LLM and return raw content string."""
-    api_key = os.environ.get("GITHUB_TOKEN", "")
+    """Call Groq LLM (OpenAI-compatible) and return raw content string."""
+    api_key = os.environ.get("GROQ_API_KEY", "")
     if not api_key:
-        raise RuntimeError("GITHUB_TOKEN not set")
+        raise RuntimeError("GROQ_API_KEY not set")
 
     body = json.dumps(
         {
-            "model": "gpt-4o-mini",
+            "model": "llama-3.3-70b-versatile",
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
@@ -200,7 +200,7 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
     ).encode()
 
     req = urllib.request.Request(
-        "https://models.inference.ai.azure.com/chat/completions",
+        "https://api.groq.com/openai/v1/chat/completions",
         data=body,
         headers={
             "Authorization": f"Bearer {api_key}",

@@ -193,7 +193,7 @@ def call_llm(prompt: str, system: str = "You are a concise, optimistic news edit
 
     body = json.dumps(
         {
-            "model": "llama-3.3-70b-versatile",
+            "model": "openai/gpt-oss-120b",
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
